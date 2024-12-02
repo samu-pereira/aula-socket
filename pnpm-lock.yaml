@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@socket.io/cluster-adapter':
+        specifier: ^0.2.2
+        version: 0.2.2(socket.io-adapter@2.5.5)
       express:
         specifier: '4'
         version: 4.21.1
@@ -36,6 +39,12 @@ packages:
     resolution: {integrity: sha512-1SUf/Cg2GzGDyaf15aR9St9TWlb+XvbZXWpDx8YKs7MLzMH/BCeopv+y9vzrzgkfykCGuWOlSu3mZhj2+FQcrg==}
     engines: {node: '>=10'}
     deprecated: This functionality has been moved to @npmcli/fs
+
+  '@socket.io/cluster-adapter@0.2.2':
+    resolution: {integrity: sha512-/tNcY6qQx0BOgjl4mFk3YxX6pjaPdEyeWhP88Ea9gTlISY4SfA7t8VxbryeAs5/9QgXzChlvSN/i37Gog3kWag==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      socket.io-adapter: ^2.4.0
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
@@ -886,6 +895,13 @@ snapshots:
       mkdirp: 1.0.4
       rimraf: 3.0.2
     optional: true
+
+  '@socket.io/cluster-adapter@0.2.2(socket.io-adapter@2.5.5)':
+    dependencies:
+      debug: 4.3.7(supports-color@5.5.0)
+      socket.io-adapter: 2.5.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@socket.io/component-emitter@3.1.2': {}
 
