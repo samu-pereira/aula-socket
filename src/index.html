@@ -26,7 +26,13 @@
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
-            const socket = io();
+            const socket = io({
+                auth: {
+                    serverOffset: 0
+                }
+            });
+
+            
 
             const form = document.getElementById('form');
             const input = document.getElementById('input');
@@ -36,7 +42,7 @@
             toggleButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 const item = document.createElement('li');
-                let msg = '';
+                let msg;
 
                 if (socket.connected) {
                     msg = '* Disconnected *';
@@ -61,13 +67,20 @@
                 }
             });
                 
-            socket.on('chat message', (msg) => {
+            socket.on('chat message', (data, serverOffset) => {
+                const { content: msg, timestamp } = data;
+
+                const date = new Date(timestamp);
+                const hours = date.getHours().toString().padStart(2, '0'); 
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+
                 const item = document.createElement('li');
 
-                item.textContent = msg;
+                item.textContent = `[${hours}:${minutes}] - ${msg}`;
                 messages.appendChild(item)
-
                 window.scrollTo(0, document.body.scrollHeight);
+
+                socket.auth.serverOffset = serverOffset;
             });
 
         </script>
