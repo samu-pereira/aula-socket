@@ -1,5 +1,4 @@
 import express from 'express';
-import { timeStamp } from 'node:console';
 import { createServer } from 'node:http';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -36,18 +35,25 @@ app.get('/', (req, res) => {
 io.on('connection', async (socket) => {
     console.log('a user connected');
     
-    socket.on('chat message', async (msg) => {
+    socket.on('chat message', async (msg, clientOffset, callback) => {
         let result;
 
         const timestamp = new Date().toISOString();
         try {
-            result = await db.run('INSERT INTO messages (content, timestamp) VALUES (?, ?)', [msg, timestamp]);
+            result = await db.run('INSERT INTO messages (content, timestamp, client_offset) VALUES (?, ?, ?)', msg, timestamp, clientOffset);
 
         } catch (e) {
-            return console.log(e);
+            if (e.errno === 19 /* SQLITE_CONSTRAINT */ ) {
+                // the message was already inserted, so we notify the client
+                callback();
+
+            } else {
+                return console.log(e)
+            };
         }
         
         io.emit('chat message', { content: msg, timestamp }, result.lastID);
+        callback();
     });
 
     if (!socket.recovered) {
